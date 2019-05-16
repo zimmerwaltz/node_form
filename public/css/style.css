@@ -1,0 +1,46 @@
+body {
+    background: #00e7c8;
+    font-family: "Montserrat", sans-serif;
+    min-height: 100vh;
+   }
+  
+  .error-message {
+    color: red; }
+  
+  #contact-us {
+    background-image: url(../images/contact_bg.png);
+    background-size: contain;
+    background-attachment: fixed; }
+    #contact-us .content {
+      padding: 2rem 0;
+      text-align: center;
+      vertical-align: middle; }
+      #contact-us .content p {
+        padding: 1rem 0;
+        color: #101b29;
+        line-height: 3rem;
+        font-weight: 400; }
+      #contact-us .content button {
+        background-color: #91CB3E;
+        text-transform: uppercase;
+        padding: 0.8rem 3rem;
+        color: white;
+        font-weight: 500;
+        border-radius: 2rem;
+        -webkit-box-shadow: 0px 5px 10px rgba(159, 194, 68, 0.25);
+        box-shadow: 0px 5px 10px rgba(159, 194, 68, 0.25); }
+        #contact-us .content button:hover {
+          background: #76a92d; }
+  
+  #contactform .btn {
+    background-color: #91CB3E;
+    text-transform: uppercase;
+    padding: 0.8rem 3rem;
+    color: white;
+    font-weight: 500;
+    border-radius: 2rem;
+    -webkit-box-shadow: 0px 5px 10px rgba(159, 194, 68, 0.25);
+    box-shadow: 0px 5px 10px rgba(159, 194, 68, 0.25); }
+    #contactform .btn:hover {
+      background: #76a92d; }
+  

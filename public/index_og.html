@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Implementing a custom modular javascript validation script with database submit using node framework">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+
+    <title>Form Validation</title>
+    
+
+  </head>
+  <body>
+    
+        
+           <!-- form starts -->
+    <section id="form-holder" class="container">
+        <div class="row justify-content-center align-items-center flex-column">
+
+            <div class="col-sm-8 col-md-6 card">
+
+                <div class="card-body">
+
+                    <form name="contactform" id="contactform" method="" action="" onsubmit="return validateForm(this)">
+                       
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Full name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="name@example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact_number">Contact Number</label>
+                            <input type="text" class="form-control" id="number" name="number" placeholder="9876543210" max="10">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <select class="form-control" id="city" name="city" required>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Delhi">Delhi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+                            
+                        </div>
+
+
+                        <!-- recaptcha starts-->
+<!--
+                        <div class="g-recaptcha" data-sitekey="6LdXTiYTAAAAAEphSmmJeOW6jm0Su_NwjFej4hdA" data-callback="recaptchaCallback"></div>
+                        <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
+-->
+                        <!-- recaptcha ends-->
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn">Submit</button>
+                        </div>
+
+                    </form> <!-- form ends -->        
+
+                    <div class="validation-messages">
+                        
+                        <p class="success-message"></p>
+                        <p class="error-message"></p>            
+                       
+                    </div>           
+
+                </div><!-- card body -->
+            </div><!-- card  -->
+        </div><!-- row -->
+    </section><!-- section ends-->
+        
+   
+
+    <!-- jquery -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Custom Js -->
+    <script>
+      
+        //capture the form
+        var contactForm = document.forms['contactform'];
+    
+        //initialize an empty array
+        var formFields = [];
+        
+        //push all form fields to an array
+        for (let i=0;i<contactForm.elements.length-1;i++){
+            formFields.push(contactForm.elements[i]);
+        }
+        
+        //appending error message holder elements to all form fields on page load
+        for (let i in formFields){
+            appendErrorElement(formFields[i]);
+        }
+        
+        //create and add an element to hold error messages on load
+        function appendErrorElement(field){
+            let errorElement = document.createElement('P');
+            let errorMessage = "";
+            errorElement.setAttribute('id',field.name+"-error");
+            errorElement.setAttribute('class','error-message');
+            field.parentNode.appendChild(errorElement);
+        }
+
+        const validator = {
+            setErrorText: //function to set the error messages
+                function(field,message){
+                    let errorElement = document.getElementById(field.name+'-error');
+                    errorElement.innerHTML = message;
+            },//setErrorText ends
+
+            checkEmpty: 
+                function(field){
+                    //resetting the error message everytime validation occurs
+                    this.setErrorText(field,'');
+
+                    if(field.value===""){
+                        //calling the error message setter
+                        this.setErrorText(field,'Please enter a value');
+                        return false;
+                    }
+                    else{
+                        //console.log(field.value);                    
+                        this.setErrorText(field,' ');   
+                        return true;
+                    }
+                },//checkEmpty ends
+
+            checkAplhabets:
+                function(field){
+                    //resetting the error message everytime validation occurs
+                    this.setErrorText(field,'');
+                    let pattern = /^[a-zA-Z ]+$/;
+                    if(!pattern.test(field.value)){
+                        this.setErrorText(field,'Please provide a valid input');
+                        return false;
+                    }
+                    else{
+                        //console.log(field.value);
+                        this.setErrorText(field,' '); 
+                        return true;
+                    }
+                },//checkAplhabets ends
+
+            checkNumbers: 
+                function(field){
+                    //resetting the error message everytime validation occurs
+                    this.setErrorText(field,'');
+                    let pattern = /^[0-9]{10}$/;
+                    if(!pattern.test(field.value)){
+                        this.setErrorText(field,'Please provide a valid number');
+                        return false;
+                    }
+                    else{
+                        //console.log(field.value);
+                        this.setErrorText(field,' '); 
+                        return true;
+                    }
+                },//checkNumbers ends
+
+            checkEmail:
+                    //function to check for email only
+                function(field){
+                    //resetting the error message everytime validation occurs
+                    this.setErrorText(field,'');
+                    let pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+                    if(!pattern.test(field.value)){
+                        this.setErrorText(field,'Please provide a valid email ID');
+                        return false;
+                    }
+                    else{
+                        //console.log(field.value);
+                        this.setErrorText(field,' '); 
+                        return true;
+                    }
+                },//checkEmail ends
+        }
+
+        
+        // validation code here
+        function validateForm(form){
+
+            var results = [];
+            //calling the validation functions on all fields
+            for (let i in formFields){
+                //check for empty fields
+                // checkEmpty(formFields[i]);
+
+                validator.checkEmpty(formFields[i]);
+                
+                //if not empty check for other parameters
+                if(validator.checkEmpty(formFields[i])){
+                    switch(formFields[i].name){
+                        case "name":
+                        validator.checkAplhabets(formFields[i]);
+                        results.push(formFields[i].value);
+                        break;
+                            
+                        case "number":
+                        validator.checkNumbers(formFields[i]);
+                        results.push(formFields[i].value);
+                        break;
+                            
+                        case "email":
+                        validator.checkEmail(formFields[i]);
+                        results.push(formFields[i].value);
+                        break;
+                            
+                        default:
+                        results.push(formFields[i].value);
+                            
+                    }
+                }      
+            }
+            
+
+            if(results.length===formFields.length){
+                // ajax to handle submission without page reload
+                console.log(results);
+                // $.ajax({
+                //     url: "./create_user", 
+                //     method: "post",
+                //     data: {
+                //         "name": contactForm.name.value,
+                //         "email": contactForm.email.value,
+                //         "number": contactForm.number.value,
+                //         "city": contactForm.city.value,
+                //         "message": contactForm.message.value,
+                //     },
+                //     success: function(response){
+                //         $('.success-message').text(response);
+                //     },
+                //     error: function(response){
+                //         $('.error-message').text(response);
+                //     }
+                        
+                // });
+            }
+            return false;
+        }
+
+             
+        
+        
+      </script>
+    
+  </body>
+</html>
