@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- bootstrap css -->
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- datatables css -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
     <!-- custom css -->
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 
 
     <title>Form Validation</title>
@@ -111,13 +111,15 @@
    
 
     <!-- jquery -->
-    <script src="./js/jquery.min.js"></script>
+    <script src="js/jquery.min.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script> -->
     <!-- Bootstrap 4 -->
-    <script src="./js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
     <!-- Datatables js -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script> -->
     <!-- Custom Js -->
@@ -191,40 +193,38 @@
                 }
                 // validateForm ends
 
-            function showResults(){
+            $(document).ready(function() {
                 //ajax to handle fetching of data from db
-                $.getJSON('./users',function(res){ 
-                    const tableBody = $('#all-data').find('tbody');//get table body
-                    res.forEach((row)=> {
-                        tableBody.append('<tr>'+
-                            "<td>"+row.id+"</td>"+
-                            "<td>"+row.name+"</td>"+    
-                            "<td>"+row.email+"</td>"+
-                            "<td>"+row.number+"</td>"+
-                            "<td>"+row.city+"</td>"+
-                            "<td>"+row.message+"</td>"+
-                            "<td>"+row.datetime+"</td>"   
-                       + "<tr>")   
-                    });
-                });
-                return false;
-            }
-            // showresults ends
-
-            showResults();
-
-
-                        
-            $(document).ready( function () {
-
-                $('#all-data').DataTable({
-                    "ajax":{
-                    "url": "./users",
-                    "dataSrc": ""
+                $.ajax({
+                    url:'/users',
+                    method: 'get', 
+                    dataType: 'json',
+                    success: function(res){
+                        //initialize the datatable
+                        showResults(res);
+                    },
+                    error: function(res){
+                        console.log("Error: "+res);
                     }
-                });
-                
-            });
+                });    
+
+                function showResults(res){
+                    const tableBody = $('#all-data');
+                    console.log(res);
+                    tableBody.DataTable({
+                        "data": res,
+                        "columns": [
+                            { "data": "id" },
+                            { "data": "name" },
+                            { "data": "email" },
+                            { "data": "number" },
+                            { "data": "city" },
+                            { "data": "message" },
+                            { "data": "datetime" }
+                        ]
+                    });
+                }// showresults ends
+            });//dom ends
 
         
             
