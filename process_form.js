@@ -59,7 +59,7 @@ app.get('/users/:id',(req,res)=>{
     });
 });
 
-//SUBMITTING data to db from form at index.html using post
+//SUBMITTING data to db from form at index.html using post (CREATION)
 app.post('/create_user',(req,res)=>{
 
     //collecting form data
@@ -85,6 +85,10 @@ app.post('/create_user',(req,res)=>{
    
 });
 
+//Deleting data
+app.delete('/users/:id',(req,res)=>{
+    res.send(req.body.id);
+})
 
 const server = app.get('/', (req,res)=>{
    console.log('hello')
