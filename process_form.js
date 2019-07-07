@@ -27,7 +27,6 @@ const pool = mysql.createPool({
 
 // get ALL users from db
 app.get('/users',(req,res)=>{
-
     //querying the db
     const queryString = 'SELECT * FROM tb_users';
     pool.query(queryString,(err,rows,fields)=>{
@@ -40,9 +39,7 @@ app.get('/users',(req,res)=>{
 
 // get SPECIFIC users from db
 app.get('/users/:id',(req,res)=>{
-
     const userId = req.params.id;
-
     //querying the db
     const queryString = 'SELECT * FROM tb_users WHERE id=?';
     pool.query(queryString,[userId],(err,rows,fields)=>{
@@ -61,7 +58,6 @@ app.get('/users/:id',(req,res)=>{
 
 //SUBMITTING data to db from form at index.html using post (CREATION)
 app.post('/create_user',(req,res)=>{
-
     //collecting form data
     const fullName = req.body.name,
         email = req.body.email,
@@ -81,13 +77,53 @@ app.post('/create_user',(req,res)=>{
         res.status(200).send(`Hi ${fullName}. Thanks for submitting your details. Your ID is ${results.insertId}`);
         res.end();
     });
-    
-   
 });
 
-//Deleting data
+//DELETING data
 app.delete('/users/:id',(req,res)=>{
-    res.send(req.body.id);
+    const userId = req.params.id;//grab ID from request
+    const queryString = 'DELETE FROM tb_users WHERE id=?';
+
+    pool.query(queryString,[userId],(err,rows,fields)=>{
+        if (err) throw err;
+        console.log('successfully fetched');
+        //display specific row in json format
+        if(rows.length===0){
+            res.status(404).send(`The user with ID ${userId} couldn't be found`);
+        }
+        else{
+            res.json(rows);
+        }      
+    });
+});
+
+//UPDATE data
+app.put('/users/:id', (req,res)=>{
+    //collecting form data
+    const userId = req.params.id,
+    fullName = req.body.name,
+        email = req.body.email,
+        number = req.body.number,
+        city = req.body.city,
+        message = req.body.message;
+
+    const queryString = "UPDATE tb_users \
+    SET name = ? , email = ?, number = ?, city = ?, message = ? \
+    WHERE id = ?;"
+
+    pool.query(queryString,[fullName,email,number,city,message,userId],(err,rows,fields)=>{
+        if (err) throw err;
+        console.log('successfully updated');
+        //display specific row in json format
+        if(rows.length===0){
+            res.status(404).send(`The user with ID ${userId} couldn't be found`);
+        }
+        else{
+            res.json(rows);
+        }      
+    });
+
+
 })
 
 const server = app.get('/', (req,res)=>{

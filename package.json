@@ -1,11 +1,11 @@
 {
   "name": "js",
   "version": "1.0.0",
-  "description": "",
   "main": "process_form.js",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "gulp": "^4.0.2",
     "joi": "^14.3.1",
     "mysql": "^2.16.0"
   },
@@ -17,5 +17,14 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zimmerwaltz/node_form.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zimmerwaltz/node_form/issues"
+  },
+  "homepage": "https://github.com/zimmerwaltz/node_form#readme",
+  "description": ""
 }

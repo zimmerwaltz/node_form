@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/style.css">
 
 
-    <title>Form Validation</title>
+    <title>Node Form</title>
     
 
   </head>
@@ -246,11 +246,25 @@
                         });
                     }).draw();
 
-
+                    //delete row function
                     $('.deleteRow').click(function () {
                         const data = tb.row( $(this).parents('tr') ).data();
-                        alert(data.id);
+                        alert(`Delete user ${data.name} with ID:${data.id}?`);//mapping done using column option above
 
+                    $.ajax({
+                        url:'/users/'+data.id,
+                        method: 'delete', 
+                        dataType: 'json',
+                        success: function(res){
+                            //initialize the datatable
+                            alert(`User ${data.name} with ID ${data.id} has been deleted`);
+                        },
+                        error: function(res){
+                            console.log(`Error: ${res}`);
+                        }
+                    }); 
+                    
+                    //NOTE: USE app.delete route
                         
 
                     });
