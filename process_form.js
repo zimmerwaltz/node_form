@@ -59,7 +59,7 @@ app.get('/users/:id',(req,res)=>{
 //SUBMITTING data to db from form at index.html using post (CREATION)
 app.post('/create_user',(req,res)=>{
     //collecting form data
-    const fullName = req.body.name,
+    const name = req.body.name,
         email = req.body.email,
         number = req.body.number,
         city = req.body.city,
@@ -67,14 +67,14 @@ app.post('/create_user',(req,res)=>{
 
     //querying the db
     const queryString = 'INSERT INTO tb_users (name,email,number,city,message) values (?,?,?,?,?)';
-    pool.query(queryString,[fullName,email,number,city,message],(err,results,fields)=>{
+    pool.query(queryString,[name,email,number,city,message],(err,results,fields)=>{
         if (err){
             console.log("ERROR",err);
             res.sendStatus(500).send(`There was an error ${err}`);
             return;
         }
         //returning the ID of the user added back to the user
-        res.status(200).send(`Hi ${fullName}. Thanks for submitting your details. Your ID is ${results.insertId}`);
+        res.status(200).send(`Hi ${name}. Thanks for submitting your details. Your ID is ${results.insertId}`);
         res.end();
     });
 });
@@ -100,18 +100,26 @@ app.delete('/users/:id',(req,res)=>{
 //UPDATE data
 app.put('/users/:id', (req,res)=>{
     //collecting form data
-    const userId = req.params.id,
-    fullName = req.body.name,
-        email = req.body.email,
-        number = req.body.number,
-        city = req.body.city,
-        message = req.body.message;
+    const userId = req.params.id;
+    //     name = req.body.name,
+    //     email = req.body.email,
+    //     number = req.body.number,
+    //     city = req.body.city,
+    //     message = req.body.message;
+
+    const updateData = {
+        name : req.body.name,
+        email : req.body.email,
+        number : req.body.number,
+        city : req.body.city,
+        message : req.body.message
+    };
 
     const queryString = "UPDATE tb_users \
-    SET name = ? , email = ?, number = ?, city = ?, message = ? \
-    WHERE id = ?;"
+    SET ? \
+    WHERE id = ?";
 
-    pool.query(queryString,[fullName,email,number,city,message,userId],(err,rows,fields)=>{
+    pool.query(queryString,[updateData,userId],(err,rows,fields)=>{
         if (err) throw err;
         console.log('successfully updated');
         //display specific row in json format
